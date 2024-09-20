@@ -1,0 +1,76 @@
+# 系统配置
+system:
+  env: local
+  port: 8888
+  db-type: postgres
+  oss-type: local
+  use-redis: true
+  use-mongo: false
+  use-multipoint: false
+  # IP限制次数 一个小时15000次
+  ip-limit-count: 15000
+  #  IP限制一个小时
+  ip-limit-time: 3600
+  #  路由全局前缀
+  router-prefix: ""
+
+# zap 日志配置
+zap:
+  level: info
+  format: console
+  prefix: "go-admin "
+  director: logs
+  show-line: true
+  encode-level: LowercaseLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+  retention-day: -1
+
+# 数据库配置
+pgsql:
+  host: 139.159.151.30
+  port: 5432
+  config: ""
+  db-name: yun
+  username: yun
+  password: 123456
+  max-idle-conn: 10
+  max-open-conn: 100
+  log-mode: ""
+  log-zap: false
+  prefix: ""
+  singular:
+
+redis:
+  #使用集群模式addr和db默认无效
+  addr: 139.159.151.30:6379
+  password: "rediswx"
+  db: 0
+
+# captcha configuration
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 0 # 0代表一直开启，大于0代表限制次数
+  open-captcha-timeout: 3600 # open-captcha大于0时才生效
+
+jwt:
+  signing-key: qmPlus
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: qmPlus
+
+# 文件上传
+local:
+  path: uploads/file
+  store-path: uploads/file
+
+# aliyun oss configuration
+aliyun-oss:
+  endpoint: yourEndpoint
+  access-key-id: yourAccessKeyId
+  access-key-secret: yourAccessKeySecret
+  bucket-name: yourBucketName
+  bucket-url: yourBucketUrl
+  base-path: yourBasePath
