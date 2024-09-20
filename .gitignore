@@ -34,3 +34,4 @@ go.work.sum
 *.pem
 
 uploads/
+logs/
