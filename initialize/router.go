@@ -2,6 +2,9 @@ package initialize
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-admin/global"
+	"go-admin/router"
+	"net/http"
 )
 
 // Routers 初始化路由
@@ -13,12 +16,19 @@ func Routers() *gin.Engine {
 		Router.Use(gin.Logger())
 	}
 
-	//systemRouter := router.RouterGroupApp.System
+	systemRouter := router.RouterGroup
 
 	// todo swagger
 
-	//PublicGroup := Router.Group(global.GA_CONFIG.System.RouterPrefix)
+	PublicGroup := Router.Group(global.GA_CONFIG.System.RouterPrefix)
 	//PrivateGroup := Router.Group(global.GA_CONFIG.System.RouterPrefix)
-
+	{
+		// 健康监测
+		PublicGroup.GET("/health", func(c *gin.Context) {
+			c.JSON(http.StatusOK, "ok")
+		})
+		// 注册验证码
+		systemRouter.InitCaptchaRouter(PublicGroup)
+	}
 	return Router
 }

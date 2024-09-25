@@ -1,9 +1,13 @@
 package router
 
-import "go-admin/router/system"
+import v1 "go-admin/api/v1"
 
 type routerGroup struct {
-	System system.RouterGroup
+	CaptchaRouter
 }
 
-var RouterGroupApp = new(routerGroup)
+var RouterGroup = new(routerGroup)
+
+var (
+	captchaApi = v1.ApiGroup.CaptchaApi
+)
