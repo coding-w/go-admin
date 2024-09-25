@@ -56,10 +56,10 @@ captcha:
   open-captcha-timeout: 3600 # open-captcha大于0时才生效
 
 jwt:
-  signing-key: qmPlus
+  signing-key: town-coding
   expires-time: 7d
   buffer-time: 1d
-  issuer: qmPlus
+  issuer: town-coding
 
 # 文件上传
 local:
