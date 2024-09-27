@@ -5,51 +5,46 @@ import (
 	"go-admin/global"
 	"go-admin/model/system"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"log"
 	"os"
 	"time"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
-// GormInit 初始化 gorm
 func GormInit() *gorm.DB {
-	pgsql := global.GA_CONFIG.Pgsql
-	if pgsql.Dbname == "" {
-		global.GA_LOG.Error("Dbname is null")
+	switch global.GA_CONFIG.System.DbType {
+	case "mysql":
+		return GormMysql()
+	case "pgsql":
+		return GormPgSql()
+	default:
 		return nil
-	}
-	pgsqlConfig := postgres.Config{
-		DSN:                  pgsql.Dsn(), // DSN data source name
-		PreferSimpleProtocol: false,
-	}
-	db, err := gorm.Open(postgres.New(pgsqlConfig), gormConfig(pgsql))
-	if err != nil {
-		global.GA_LOG.Error(err.Error())
-		return nil
-	} else {
-		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(pgsql.MaxIdleConn)
-		sqlDB.SetMaxOpenConns(pgsql.MaxOpenConn)
-		return db
 	}
 }
 
-func gormConfig(pgsql config.Pgsql) *gorm.Config {
+func GormConfig() *gorm.Config {
+	var general config.GeneralDB
+	switch global.GA_CONFIG.System.DbType {
+	case "mysql":
+		general = global.GA_CONFIG.Mysql.GeneralDB
+	case "pgsql":
+		general = global.GA_CONFIG.Pgsql.GeneralDB
+	default:
+		general = global.GA_CONFIG.Pgsql.GeneralDB
+	}
 	return &gorm.Config{
 		// gorm 日志配置
-		Logger: logger.New(NewWriter(pgsql, log.New(os.Stdout, "\r\n", log.LstdFlags)), logger.Config{
+		Logger: logger.New(NewWriter(general, log.New(os.Stdout, "\r\n", log.LstdFlags)), logger.Config{
 			SlowThreshold: 200 * time.Millisecond,
-			LogLevel:      pgsql.LogLevel(),
+			LogLevel:      general.LogLevel(),
 			Colorful:      true,
 		}),
 		// 定义命名规则的策略
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   pgsql.Prefix,
-			SingularTable: pgsql.Singular,
+			TablePrefix:   general.Prefix,
+			SingularTable: general.Singular,
 		},
 		// 禁用外键约束
 		DisableForeignKeyConstraintWhenMigrating: true,

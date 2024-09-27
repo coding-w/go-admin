@@ -8,13 +8,13 @@ import (
 )
 
 type Writer struct {
-	config config.Pgsql
+	config config.GeneralDB
 	writer logger.Writer
 }
 
 var _ logger.Writer = (*Writer)(nil)
 
-func NewWriter(config config.Pgsql, writer logger.Writer) *Writer {
+func NewWriter(config config.GeneralDB, writer logger.Writer) *Writer {
 	return &Writer{config: config, writer: writer}
 }
 

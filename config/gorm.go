@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type Pgsql struct {
+type GeneralDB struct {
 	Host        string `mapstructure:"host" json:"host" yaml:"host"`                            // 数据库地址
 	Port        int    `mapstructure:"port" json:"port" yaml:"port"`                            // 数据库端口
 	Config      string `mapstructure:"config" json:"config" yaml:"config"`                      // 高级配置
@@ -19,14 +19,11 @@ type Pgsql struct {
 	LogZap      bool   `mapstructure:"log-zap" json:"log-zap" yaml:"log-zap"`                   // 是否通过zap写入日志文件
 	Prefix      string `mapstructure:"prefix" json:"prefix" yaml:"prefix"`                      // 数据库前缀
 	Singular    bool   `mapstructure:"singular" json:"singular" yaml:"singular"`                // 是否开启全局禁用复数，true表示开启
+	Engine      string `mapstructure:"engine" json:"engine" yaml:"engine" default:"InnoDB"`     // 数据库引擎，默认InnoDB
 }
 
-func (p *Pgsql) Dsn() string {
-	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d %s", p.Host, p.Username, p.Password, p.Dbname, p.Port, p.Config)
-}
-
-func (p *Pgsql) LogLevel() logger.LogLevel {
-	switch strings.ToLower(p.LogMode) {
+func (g *GeneralDB) LogLevel() logger.LogLevel {
+	switch strings.ToLower(g.LogMode) {
 	case "silent", "Silent":
 		return logger.Silent
 	case "error", "Error":
@@ -38,4 +35,20 @@ func (p *Pgsql) LogLevel() logger.LogLevel {
 	default:
 		return logger.Info
 	}
+}
+
+type Mysql struct {
+	GeneralDB `yaml:",inline" mapstructure:",squash"`
+}
+
+func (m *Mysql) Dsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", m.Username, m.Password, m.Host, m.Port, m.Dbname, m.Config)
+}
+
+type Pgsql struct {
+	GeneralDB `yaml:",inline" mapstructure:",squash"`
+}
+
+func (p *Pgsql) Dsn() string {
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d %s", p.Host, p.Username, p.Password, p.Dbname, p.Port, p.Config)
 }
