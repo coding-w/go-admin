@@ -4,6 +4,9 @@ go 1.22.5
 
 require (
 	github.com/gin-gonic/gin v1.10.0
+	github.com/go-sql-driver/mysql v1.8.1
+	github.com/gofrs/uuid/v5 v5.3.0
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/mojocn/base64Captcha v1.3.6
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/redis/go-redis/v9 v9.6.1
@@ -11,6 +14,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.6.0
+	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.12
 )
@@ -29,10 +33,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
-	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/gofrs/uuid/v5 v5.3.0 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
@@ -69,5 +70,4 @@ require (
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/mysql v1.5.7 // indirect
 )
