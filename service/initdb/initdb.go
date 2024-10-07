@@ -3,6 +3,7 @@ package initdb
 import (
 	"context"
 	"errors"
+	"fmt"
 )
 
 const (
@@ -14,12 +15,17 @@ const (
 	InitOrderSystem   = 10
 	InitOrderInternal = 1000
 	InitOrderExternal = 100000
+	InitSuccess       = "\n[%v] --> 初始数据成功!\n"
+	InitDataExist     = "\n[%v] --> %v 的初始数据已存在!\n"
+	InitDataFailed    = "\n[%v] --> %v 初始数据失败! \nerr: %+v\n"
+	InitDataSuccess   = "\n[%v] --> %v 初始数据成功!\n"
 )
 
 var (
 	MissingDBContextError        = errors.New("missing db in context")
 	MissingDependentContextError = errors.New("missing dependent value in context")
 	DBTypeMismatchError          = errors.New("db type mismatch")
+	DBNameNotFountError          = errors.New("db name not found in config")
 )
 
 // SourceInitializer 提供 source/*/init() 使用的接口，每个 initializer 完成一个初始化过程
@@ -36,13 +42,10 @@ type SourceInitializer interface {
 	InitializeData(ctx context.Context) (next context.Context, err error)
 
 	// TableCreated 返回表是否已经创建的状态，用于跳过已存在的表结构迁移
-	TableCreated(ctx context.Context) (created bool)
+	TableCreated() (created bool)
 
 	// DataInserted 返回数据是否已经插入，用于跳过已存在的数据初始化
-	DataInserted(ctx context.Context) (inserted bool)
-
-	// StateFeedback 用于提供每个步骤的状态反馈信息，可用于日志记录或外部调用者跟踪状态
-	StateFeedback() string
+	DataInserted() (inserted bool)
 }
 
 // orderedInitializer 组合一个顺序字段，以供排序
@@ -68,4 +71,21 @@ func (s initSlice) Less(i, j int) bool {
 // Swap 交换两个初始化器
 func (s initSlice) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
+}
+
+// RegisterInit 注册要执行的初始化过程，会在 InitDB() 时调用
+func RegisterInit(order int, i SourceInitializer) {
+	if initializers == nil {
+		initializers = initSlice{}
+	}
+	if cache == nil {
+		cache = map[string]*orderedInitializer{}
+	}
+	name := i.InitializerName()
+	if _, existed := cache[name]; existed {
+		panic(fmt.Sprintf("Name conflict on %s", name))
+	}
+	ni := orderedInitializer{order, i}
+	initializers = append(initializers, &ni)
+	cache[name] = &ni
 }

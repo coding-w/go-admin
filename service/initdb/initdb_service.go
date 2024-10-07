@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"go-admin/global"
-	"gorm.io/gorm"
 	"sort"
 )
 
@@ -36,13 +35,10 @@ func (initDBService *InitDBService) InitDB() (err error) {
 	default:
 		return errors.New("必须明确数据库类型，pgsql 或者 mysql")
 	}
-	ctx, err = initHandler.EnsureDB(ctx, &conf)
+	ctx, err = initHandler.EnsureDB(ctx)
 	if err != nil {
 		return err
 	}
-
-	db := ctx.Value("db").(*gorm.DB)
-	global.GVA_DB = db
 
 	if err = initHandler.InitTables(ctx, initializers); err != nil {
 		return err
@@ -51,9 +47,6 @@ func (initDBService *InitDBService) InitDB() (err error) {
 		return err
 	}
 
-	if err = initHandler.WriteConfig(ctx); err != nil {
-		return err
-	}
 	initializers = initSlice{}
 	cache = map[string]*orderedInitializer{}
 	return nil
