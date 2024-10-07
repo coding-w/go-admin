@@ -22,8 +22,8 @@ func (i *initApi) InitializerName() string {
 	return system.SysUser{}.TableName()
 }
 
-func (i *initApi) MigrateTable(ctx context.Context) (context.Context, error) {
-	return ctx, global.GA_DB.AutoMigrate(&system.SysApi{})
+func (i *initApi) MigrateTable() error {
+	return global.GA_DB.AutoMigrate(&system.SysApi{})
 }
 
 func (i *initApi) TableCreated() bool {

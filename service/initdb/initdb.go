@@ -35,7 +35,7 @@ type SourceInitializer interface {
 
 	// MigrateTable 执行表结构的迁移或初始化，返回是否迁移成功的标志
 	// 参数 next 返回当前的上下文状态，err 表示执行中出现的错误
-	MigrateTable(ctx context.Context) (next context.Context, err error)
+	MigrateTable() (err error)
 
 	// InitializeData 初始化数据，返回是否成功初始化的标志
 	// 参数 next 返回当前的上下文状态，err 表示执行中出现的错误
