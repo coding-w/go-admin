@@ -35,18 +35,12 @@ func createDatabase(dsn string, driver string, createSql string) error {
 
 // createTables 创建表（默认 dbInitHandler.initTables 行为）
 func createTables(ctx context.Context, inits initSlice) error {
-	next, cancel := context.WithCancel(ctx)
-	defer func(c func()) {
-		c()
-	}(cancel)
 	for _, init := range inits {
-		if init.TableCreated(next) {
+		if init.TableCreated() {
 			continue
 		}
-		if n, err := init.MigrateTable(next); err != nil {
+		if err := init.MigrateTable(); err != nil {
 			return err
-		} else {
-			next = n
 		}
 	}
 	return nil

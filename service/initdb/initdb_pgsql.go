@@ -52,7 +52,7 @@ func (p PgsqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 	next, cancel := context.WithCancel(ctx)
 	defer func(c func()) { c() }(cancel)
 	for _, init := range inits {
-		if init.DataInserted(next) {
+		if init.DataInserted() {
 			color.Info.Printf(InitDataExist, Pgsql, init.InitializerName())
 			continue
 		}
