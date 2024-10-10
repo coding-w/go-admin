@@ -17,3 +17,8 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	}
 	return data
 }
+
+// Pointer 的作用是接收一个类型为 T 的参数并返回一个指向该参数的指针
+func Pointer[T any](in T) (out *T) {
+	return &in
+}

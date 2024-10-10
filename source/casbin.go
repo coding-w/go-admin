@@ -27,7 +27,7 @@ func (i *initCasbin) TableCreated() bool {
 	return global.GA_DB.Migrator().HasTable(&adapter.CasbinRule{})
 }
 
-func (i initCasbin) InitializerName() string {
+func (i *initCasbin) InitializerName() string {
 	var entity adapter.CasbinRule
 	return entity.TableName()
 }
