@@ -52,14 +52,19 @@ func (m MysqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 	next, cancel := context.WithCancel(ctx)
 	defer func(c func()) { c() }(cancel)
 	for _, init := range inits {
+		// 查看 是否存在数据
 		if init.DataInserted() {
+			// 数据已存在
 			color.Info.Printf(InitDataExist, Mysql, init.InitializerName())
 			continue
 		}
+		// 初始化数据
 		if n, err := init.InitializeData(next); err != nil {
+			// 初始化错误
 			color.Info.Printf(InitDataFailed, Mysql, init.InitializerName(), err)
 			return err
 		} else {
+			// 初始化完成
 			next = n
 			color.Info.Printf(InitDataSuccess, Mysql, init.InitializerName())
 		}

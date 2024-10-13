@@ -36,9 +36,11 @@ func createDatabase(dsn string, driver string, createSql string) error {
 // createTables 创建表（默认 dbInitHandler.initTables 行为）
 func createTables(ctx context.Context, inits initSlice) error {
 	for _, init := range inits {
+		// 判断表是否存在
 		if init.TableCreated() {
 			continue
 		}
+		// 创建表
 		if err := init.MigrateTable(); err != nil {
 			return err
 		}
