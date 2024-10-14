@@ -2,9 +2,9 @@
 system:
   env: local
   port: 8888
-  db-type: postgres
+  db-type: mysql
   oss-type: local
-  use-redis: true
+  use-redis: false
   use-mongo: false
   use-multipoint: false
   # IP限制次数 一个小时15000次
@@ -27,12 +27,12 @@ zap:
   retention-day: -1
 
 # 数据库配置
-pgsql:
-  host: 139.159.151.30
-  port: 5432
+mysql:
+  host: 192.168.3.216
+  port: 3306
   config: ""
-  db-name: yun
-  username: yun
+  db-name: test
+  username: root
   password: 123456
   max-idle-conn: 10
   max-open-conn: 100

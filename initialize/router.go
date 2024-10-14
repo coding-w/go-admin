@@ -29,6 +29,7 @@ func Routers() *gin.Engine {
 		})
 		// 注册验证码
 		systemRouter.InitCaptchaRouter(PublicGroup)
+		systemRouter.InitDBRouter(PublicGroup)
 	}
 	return Router
 }

@@ -1,7 +1,10 @@
 package v1
 
+import "go-admin/service"
+
 type apiGroup struct {
 	CaptchaApi
+	DBApi
 	//UserApi
 	//AuthMenuApi
 	//AuthorityApi
@@ -13,4 +16,6 @@ type apiGroup struct {
 
 var ApiGroup = new(apiGroup)
 
-var ()
+var (
+	initDBService = service.ServiceGroup.InitDBService
+)

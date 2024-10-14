@@ -19,7 +19,7 @@ func init() {
 }
 
 func (i *initApi) InitializerName() string {
-	return system.SysUser{}.TableName()
+	return system.SysApi{}.TableName()
 }
 
 func (i *initApi) MigrateTable() error {

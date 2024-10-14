@@ -14,6 +14,8 @@ func main() {
 	global.GA_DB = initialize.GormInit()
 	initialize.OtherInit()
 	if global.GA_DB != nil {
+		// 初始化表
+		initialize.RegisterTables()
 		// 程序结束前关闭数据库链接
 		db, _ := global.GA_DB.DB()
 		defer db.Close()
