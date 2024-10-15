@@ -13,6 +13,7 @@ type serviceGroup struct {
 	BaseMenuService
 	DictionaryService
 	UserService
+	OperationRecordService
 }
 
 var ServiceGroup = new(serviceGroup)
