@@ -144,9 +144,6 @@ func (sm *schedulerManager) AddTaskByJob(cronName string, spec string, job inter
 
 // 获取或创建指定的 Cron
 func (sm *schedulerManager) getOrCreateCron(cronName string, option ...cron.Option) *taskManager {
-	sm.Lock()
-	defer sm.Unlock()
-
 	if cm, exists := sm.cronMap[cronName]; exists {
 		return cm
 	}

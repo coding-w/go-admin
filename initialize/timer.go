@@ -1,27 +1,27 @@
 package initialize
 
-//
-//import (
-//	"fmt"
-//	"github.com/flipped-aurora/gin-vue-admin/server/task"
-//
-//	"github.com/flipped-aurora/gin-vue-admin/server/global"
-//)
-//
-//func Timer() {
-//	go func() {
-//		var option []cron.Option
-//		option = append(option, cron.WithSeconds())
-//		timer := timer.NewTimerTask()
-//		// 清理DB定时任务
-//		_, err := timer.AddTaskByFunc("ClearDB", "@daily", func() {
-//			err := task.ClearTable(global.GVA_DB) // 定时任务方法定在task文件包中
-//			if err != nil {
-//				fmt.Println("timer error:", err)
-//			}
-//		}, "定时清理数据库【日志，黑名单】内容", option...)
-//		if err != nil {
-//			fmt.Println("add timer error:", err)
-//		}
-//	}()
-//}
+import (
+	"github.com/robfig/cron/v3"
+	"go-admin/global"
+	"go-admin/task"
+	"go.uber.org/zap"
+)
+
+func Timer() {
+	go func() {
+		var option []cron.Option
+		// 允许秒级调度
+		option = append(option, cron.WithSeconds())
+		// 清理DB定时任务 每天三点执行
+		_, err := global.GA_Scheduler.AddTaskByFunc("ClearDB", "0 3 * * *", func() {
+			// 定时任务方法定在task文件包中
+			err := task.ClearTable(global.GA_DB)
+			if err != nil {
+				global.GA_LOG.Error("timer error:", zap.Error(err))
+			}
+		}, "定时清理数据库【日志，黑名单】内容", option...)
+		if err != nil {
+			global.GA_LOG.Error("add timer error:", zap.Error(err))
+		}
+	}()
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"go-admin/config"
+	"go-admin/scheduler"
 	"go.uber.org/zap"
 	"golang.org/x/sync/singleflight"
 	"gorm.io/gorm"
@@ -20,4 +21,5 @@ var (
 	GA_ROUTERS             gin.RoutesInfo
 	LocalCache             *cache.Cache
 	GA_Concurrency_Control = &singleflight.Group{}
+	GA_Scheduler           = scheduler.NewSchedulerManager()
 )

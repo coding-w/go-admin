@@ -8,9 +8,12 @@ import (
 )
 
 func main() {
+	// 读取配置
 	global.GA_VIPER = core.Viper()
+	// 初始化 日志系统
 	global.GA_LOG = core.Zap()
 	zap.ReplaceGlobals(global.GA_LOG)
+	// 初始化 gorm
 	global.GA_DB = initialize.GormInit()
 	initialize.OtherInit()
 	if global.GA_DB != nil {
@@ -20,6 +23,8 @@ func main() {
 		db, _ := global.GA_DB.DB()
 		defer db.Close()
 	}
+	// 启动 定时任务
+	initialize.Timer()
 	// 启动服务
 	core.RunServer()
 }
