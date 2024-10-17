@@ -5,6 +5,12 @@ import v1 "go-admin/api/v1"
 type routerGroup struct {
 	CaptchaRouter
 	DBRouter
+	ApiRouter
+	AuthorityRouter
+	AuthorityBtnRouter
+	SysDictionaryRouter
+	SysMenuRouter
+	SysUserRouter
 }
 
 var RouterGroup = new(routerGroup)
