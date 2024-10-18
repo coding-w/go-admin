@@ -14,6 +14,7 @@ type serviceGroup struct {
 	DictionaryService
 	UserService
 	OperationRecordService
+	FileUploadService
 }
 
 var ServiceGroup = new(serviceGroup)

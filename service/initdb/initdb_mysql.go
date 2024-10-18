@@ -29,7 +29,7 @@ func (m MysqlInitHandler) EnsureDB(ctx context.Context) (next context.Context, e
 	dsn := m.InitDsn()
 	// 创建数据库
 	if err = createDatabase(dsn, "mysql", createSql); err != nil {
-		return nil, err
+		return ctx, err
 	}
 
 	var db *gorm.DB
@@ -41,7 +41,7 @@ func (m MysqlInitHandler) EnsureDB(ctx context.Context) (next context.Context, e
 		return ctx, err
 	}
 	global.GA_DB = db
-	return next, err
+	return ctx, err
 }
 
 func (m MysqlInitHandler) InitTables(ctx context.Context, inits initSlice) error {
@@ -74,5 +74,5 @@ func (m MysqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 }
 
 func (m MysqlInitHandler) InitDsn() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/", global.GA_CONFIG.Mysql.Username, global.GA_CONFIG.Mysql.Password, global.GA_CONFIG.Mysql.Host, global.GA_CONFIG.Mysql.Port)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", global.GA_CONFIG.Mysql.Username, global.GA_CONFIG.Mysql.Password, global.GA_CONFIG.Mysql.Host, global.GA_CONFIG.Mysql.Port, global.GA_CONFIG.Mysql.Dbname)
 }

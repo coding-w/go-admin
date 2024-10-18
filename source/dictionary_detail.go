@@ -7,6 +7,7 @@ import (
 	"go-admin/global"
 	"go-admin/model/system"
 	"go-admin/service/initdb"
+	"log"
 )
 
 const initOrderDictDetail = initOrderDict + 1
@@ -97,8 +98,9 @@ func (i *initDictDetail) TableCreated() (created bool) {
 
 func (i *initDictDetail) DataInserted() (inserted bool) {
 	var dict system.SysDictionary
-	if err := global.GA_DB.Preload("SysDictionaryDetails").
-		First(&dict, &system.SysDictionary{Name: "数据库bool类型"}).Error; err != nil {
+	if err := global.GA_DB.Model(system.SysDictionary{}).
+		First(&dict).Error; err != nil {
+		log.Println(dict)
 		return false
 	}
 	return len(dict.SysDictionaryDetails) > 0 && dict.SysDictionaryDetails[0].Label == "tinyint"

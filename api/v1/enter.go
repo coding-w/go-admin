@@ -26,4 +26,5 @@ var (
 	dictionaryService   = service.ServiceGroup.DictionaryService
 	userService         = service.ServiceGroup.UserService
 	jwtService          = service.ServiceGroup.JwtService
+	fileUploadService   = service.ServiceGroup.FileUploadService
 )
