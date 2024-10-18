@@ -9,13 +9,13 @@ import (
 
 var (
 	cfgFile string
+	port    int
 )
 
 func init() {
 	cobra.OnInitialize(initConfig)
 	ServeCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is config.yaml)")
-	ServeCmd.PersistentFlags().StringP("author", "n", "wangx", "author info")
-	ServeCmd.PersistentFlags().IntP("port", "p", 8888, "serve port")
+	ServeCmd.PersistentFlags().IntVarP(&port, "port", "p", 8888, "serve port")
 }
 
 var ServeCmd = &cobra.Command{
@@ -23,6 +23,7 @@ var ServeCmd = &cobra.Command{
 	Short: "Serve the application Short Description",
 	Long:  `Serve the application Long Long Long Long Long Long Description`,
 	Run: func(cmd *cobra.Command, args []string) {
+		global.GA_CONFIG.System.Port = port
 		startApp()
 	},
 }

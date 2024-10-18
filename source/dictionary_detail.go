@@ -98,7 +98,7 @@ func (i *initDictDetail) TableCreated() (created bool) {
 
 func (i *initDictDetail) DataInserted() (inserted bool) {
 	var dict system.SysDictionary
-	if err := global.GA_DB.Model(system.SysDictionary{}).
+	if err := global.GA_DB.Model(system.SysDictionary{}).Preload("SysDictionaryDetails").Where("name", "数据库bool类型").
 		First(&dict).Error; err != nil {
 		log.Println(dict)
 		return false

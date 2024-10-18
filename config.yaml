@@ -2,7 +2,7 @@
 system:
   env: local
   port: 8888
-  db-type: mysql
+  db-type: pgsql
   oss-type: local
   use-redis: false
   use-mongo: false
@@ -33,6 +33,20 @@ mysql:
   config: ""
   db-name: test
   username: root
+  password: 123456
+  max-idle-conn: 10
+  max-open-conn: 100
+  log-mode: ""
+  log-zap: false
+  prefix: ""
+  singular:
+
+pgsql:
+  host: localhost
+  port: 5432
+  config: ""
+  db-name: yun
+  username: yun
   password: 123456
   max-idle-conn: 10
   max-open-conn: 100

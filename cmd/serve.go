@@ -16,6 +16,7 @@ var serve = &cobra.Command{
 	Use:   "serve",
 	Short: "运行程序",
 	Run: func(cmd *cobra.Command, args []string) {
+		global.GA_CONFIG.System.Port = port
 		startApp()
 	},
 }
@@ -30,8 +31,6 @@ func startApp() {
 	global.GA_DB = initialize.GormInit()
 	initialize.OtherInit()
 	if global.GA_DB != nil {
-		// 初始化表
-		initialize.RegisterTables()
 		// 程序结束前关闭数据库链接
 		db, _ := global.GA_DB.DB()
 		defer db.Close()

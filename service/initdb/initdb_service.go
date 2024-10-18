@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"go-admin/global"
+	"go-admin/model/system"
 	"sort"
 )
 
@@ -39,6 +40,11 @@ func (initDBService *InitDBService) InitDB() (err error) {
 	if err != nil {
 		return err
 	}
+	// 初始化表
+	err = registerTables()
+	if err != nil {
+		return err
+	}
 
 	if err = initHandler.InitTables(ctx, initializers); err != nil {
 		return err
@@ -49,5 +55,35 @@ func (initDBService *InitDBService) InitDB() (err error) {
 
 	initializers = initSlice{}
 	cache = map[string]*orderedInitializer{}
+	return nil
+}
+
+func registerTables() error {
+	db := global.GA_DB
+	err := db.AutoMigrate(
+		system.SysApi{},
+		system.SysIgnoreApi{},
+		system.SysUser{},
+		system.SysBaseMenu{},
+		system.JwtBlacklist{},
+		system.SysAuthority{},
+		system.SysDictionary{},
+		system.SysOperationRecord{},
+		system.SysAutoCodeHistory{},
+		system.SysDictionaryDetail{},
+		system.SysBaseMenuParameter{},
+		system.SysBaseMenuBtn{},
+		system.SysAuthorityBtn{},
+		system.SysExportTemplate{},
+		system.Condition{},
+		system.JoinTemplate{},
+		system.ExaFile{},
+		system.ExaCustomer{},
+		system.ExaFileChunk{},
+		system.ExaFileUploadAndDownload{},
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -2,8 +2,10 @@ package initdb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/gookit/color"
+	"github.com/jackc/pgx/v5/pgconn"
 	"go-admin/global"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,22 +28,26 @@ func (p PgsqlInitHandler) EnsureDB(ctx context.Context) (next context.Context, e
 	if global.GA_CONFIG.Pgsql.Dbname == "" {
 		return ctx, DBNameNotFountError
 	}
-	createSql := fmt.Sprintf("CREATE DATABASE %s;", global.GA_CONFIG.Pgsql.Dbname)
-	dsn := p.InitDsn()
+	createSql := fmt.Sprintf("CREATE DATABASE  %s;", global.GA_CONFIG.Pgsql.Dbname)
 	// 创建数据库
-	if err = createDatabase(dsn, "pgx", createSql); err != nil {
-		return nil, err
+	if err = createDatabase(p.PgsqlEmptyDsn(), "pgx", createSql); err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code != "42P04" {
+				return ctx, err
+			}
+		}
 	}
-
 	var db *gorm.DB
 	if db, err = gorm.Open(postgres.New(postgres.Config{
-		DSN:                  dsn, // DSN data source name
+		DSN:                  p.InitDsn(),
 		PreferSimpleProtocol: false,
 	}), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}); err != nil {
+		fmt.Println(err)
 		return ctx, err
 	}
-	next = context.WithValue(next, "db", db)
-	return next, err
+	global.GA_DB = db
+	return ctx, err
 }
 
 func (p PgsqlInitHandler) InitTables(ctx context.Context, inits initSlice) error {
@@ -73,7 +79,12 @@ func (p PgsqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 	return nil
 }
 
+func (p PgsqlInitHandler) PgsqlEmptyDsn() string {
+	i := global.GA_CONFIG.Pgsql
+	return "host=" + i.Host + " user=" + i.Username + " password=" + i.Password + " port=" + strconv.Itoa(i.Port) + " sslmode=disable TimeZone=Asia/Shanghai"
+}
+
 func (p PgsqlInitHandler) InitDsn() string {
 	i := global.GA_CONFIG.Pgsql
-	return "host=" + i.Host + " user=" + i.Username + " password=" + i.Password + " port=" + strconv.Itoa(i.Port) + " dbname=" + "postgres" + " " + "sslmode=disable TimeZone=Asia/Shanghai"
+	return "host=" + i.Host + " user=" + i.Username + " password=" + i.Password + " port=" + strconv.Itoa(i.Port) + " dbname=" + i.Dbname + " sslmode=disable TimeZone=Asia/Shanghai"
 }

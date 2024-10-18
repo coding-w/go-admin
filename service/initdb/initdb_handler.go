@@ -15,22 +15,26 @@ type TypedDBInitHandler interface {
 }
 
 // createDatabase 创建数据库（ EnsureDB() 中调用 ）
-func createDatabase(dsn string, driver string, createSql string) error {
+func createDatabase(dsn, driver, createSql string) error {
 	db, err := sql.Open(driver, dsn)
 	if err != nil {
-		return err
+		return fmt.Errorf("无法打开数据库连接: %w", err)
 	}
-	defer func(db *sql.DB) {
-		err = db.Close()
-		if err != nil {
-			fmt.Println(err)
+	defer func() {
+		if closeErr := db.Close(); closeErr != nil {
+			fmt.Errorf("关闭数据库时出错: %w", closeErr)
 		}
-	}(db)
+	}()
+
 	if err = db.Ping(); err != nil {
-		return err
+		return fmt.Errorf("数据库未响应: %w", err)
 	}
-	_, err = db.Exec(createSql)
-	return err
+
+	if _, err = db.Exec(createSql); err != nil {
+		return fmt.Errorf("执行创建数据库SQL失败: %w", err)
+	}
+
+	return nil
 }
 
 // createTables 创建表（默认 dbInitHandler.initTables 行为）

@@ -13,11 +13,12 @@ func init() {
 var run = &cobra.Command{
 	Use:   "init",
 	Short: "初始化数据库",
-	Long:  "初始化数据库需要完善配置信息",
+	Long:  "初始化数据库需要完善config.yaml信息",
 	Run: func(cmd *cobra.Command, args []string) {
 		err := service.ServiceGroup.InitDB()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(err.Error())
 		}
+		fmt.Println("初始化数据库成功！！！")
 	},
 }

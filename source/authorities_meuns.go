@@ -63,7 +63,7 @@ func (i *initMenuAuthority) TableCreated() (created bool) {
 
 func (i *initMenuAuthority) DataInserted() (inserted bool) {
 	var auth system.SysAuthority
-	ret := global.GA_DB.Model(auth).Where("authority_id = ?", 9528).First(&auth)
+	ret := global.GA_DB.Model(auth).Where("authority_id = ?", 9528).Preload("SysBaseMenus").Find(&auth)
 	if ret != nil {
 		if ret.Error != nil {
 			return false

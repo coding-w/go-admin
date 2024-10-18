@@ -3,8 +3,6 @@ package initialize
 import (
 	"go-admin/config"
 	"go-admin/global"
-	"go-admin/model/system"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -49,52 +47,4 @@ func GormConfig() *gorm.Config {
 		// 禁用外键约束
 		DisableForeignKeyConstraintWhenMigrating: true,
 	}
-}
-
-func RegisterTables() {
-	db := global.GA_DB
-	err := db.AutoMigrate(
-
-		system.SysApi{},
-		system.SysIgnoreApi{},
-		system.SysUser{},
-		system.SysBaseMenu{},
-		system.JwtBlacklist{},
-		system.SysAuthority{},
-		system.SysDictionary{},
-		system.SysOperationRecord{},
-		system.SysAutoCodeHistory{},
-		system.SysDictionaryDetail{},
-		system.SysBaseMenuParameter{},
-		system.SysBaseMenuBtn{},
-		system.SysAuthorityBtn{},
-		system.SysExportTemplate{},
-		system.Condition{},
-		system.JoinTemplate{},
-		system.ExaFile{},
-		system.ExaCustomer{},
-		system.ExaFileChunk{},
-		system.ExaFileUploadAndDownload{},
-	)
-	if err != nil {
-		global.GA_LOG.Error("register table failed", zap.Error(err))
-		os.Exit(0)
-	}
-
-	err = bizModel()
-
-	if err != nil {
-		global.GA_LOG.Error("register biz_table failed", zap.Error(err))
-		os.Exit(0)
-	}
-	global.GA_LOG.Info("register table success")
-}
-
-func bizModel() error {
-	db := global.GA_DB
-	err := db.AutoMigrate()
-	if err != nil {
-		return err
-	}
-	return nil
 }

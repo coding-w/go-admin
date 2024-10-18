@@ -13,7 +13,7 @@ func Timer() {
 		// 允许秒级调度
 		option = append(option, cron.WithSeconds())
 		// 清理DB定时任务 每天三点执行
-		_, err := global.GA_Scheduler.AddTaskByFunc("ClearDB", "0 3 * * *", func() {
+		_, err := global.GA_Scheduler.AddTaskByFunc("ClearDB", "0 3 * * * *", func() {
 			// 定时任务方法定在task文件包中
 			err := task.ClearTable(global.GA_DB)
 			if err != nil {
@@ -23,5 +23,6 @@ func Timer() {
 		if err != nil {
 			global.GA_LOG.Error("add timer error:", zap.Error(err))
 		}
+		global.GA_LOG.Info("add timer over")
 	}()
 }
