@@ -14,14 +14,14 @@ var (
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	ServeCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is config.yaml)")
+	ServeCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file path (default is config.yaml)")
 	ServeCmd.PersistentFlags().IntVarP(&port, "port", "p", 8888, "serve port")
 }
 
 var ServeCmd = &cobra.Command{
 	Use:   "app",
-	Short: "Serve the application Short Description",
-	Long:  `Serve the application Long Long Long Long Long Long Description`,
+	Short: "go-admin 是基于 Gin 和 Gorm 开发的管理系统，学习和实践 Gin 的使用。",
+	Long:  `go-admin 是基于 Gin 和 Gorm 开发的管理系统，主要具备 JWT + Casbin 鉴权、动态路由、动态菜单以及文件上传下载等功能。该项目旨在学习和实践 Gin 的使用，源自于某开源项目的改进与扩展。`,
 	Run: func(cmd *cobra.Command, args []string) {
 		global.GA_CONFIG.System.Port = port
 		startApp()
