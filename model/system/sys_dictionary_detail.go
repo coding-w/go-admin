@@ -1,7 +1,9 @@
 // 自动生成模板SysDictionaryDetail
 package system
 
-import "go-admin/global"
+import (
+	"go-admin/global"
+)
 
 // 如果含有time.Time 请自行import time包
 type SysDictionaryDetail struct {

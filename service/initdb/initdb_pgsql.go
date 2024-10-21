@@ -30,7 +30,7 @@ func (p PgsqlInitHandler) EnsureDB(ctx context.Context) (next context.Context, e
 	}
 	createSql := fmt.Sprintf("CREATE DATABASE  %s;", global.GA_CONFIG.Pgsql.Dbname)
 	// 创建数据库
-	if err = createDatabase(p.PgsqlEmptyDsn(), "pgx", createSql); err != nil {
+	if err = createDatabase(p.InitEmptyDsn(), "pgx", createSql); err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
 			if pgErr.Code != "42P04" {
@@ -79,7 +79,7 @@ func (p PgsqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 	return nil
 }
 
-func (p PgsqlInitHandler) PgsqlEmptyDsn() string {
+func (p PgsqlInitHandler) InitEmptyDsn() string {
 	i := global.GA_CONFIG.Pgsql
 	return "host=" + i.Host + " user=" + i.Username + " password=" + i.Password + " port=" + strconv.Itoa(i.Port) + " sslmode=disable TimeZone=Asia/Shanghai"
 }

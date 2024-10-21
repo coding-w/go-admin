@@ -26,17 +26,16 @@ func (m MysqlInitHandler) EnsureDB(ctx context.Context) (next context.Context, e
 		return ctx, DBNameNotFountError
 	}
 	createSql := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;", global.GA_CONFIG.Mysql.Dbname)
-	dsn := m.InitDsn()
 	// 创建数据库
-	if err = createDatabase(dsn, "mysql", createSql); err != nil {
+	if err = createDatabase(m.InitEmptyDsn(), "mysql", createSql); err != nil {
 		return ctx, err
 	}
 
 	var db *gorm.DB
 	if db, err = gorm.Open(mysql.New(mysql.Config{
-		DSN:                       dsn,  // DSN data source name
-		DefaultStringSize:         191,  // string 类型字段的默认长度
-		SkipInitializeWithVersion: true, // 根据版本自动配置
+		DSN:                       m.InitDsn(), // DSN data source name
+		DefaultStringSize:         191,         // string 类型字段的默认长度
+		SkipInitializeWithVersion: true,        // 根据版本自动配置
 	}), &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}); err != nil {
 		return ctx, err
 	}
@@ -71,6 +70,10 @@ func (m MysqlInitHandler) InitData(ctx context.Context, inits initSlice) error {
 	}
 	color.Info.Printf(InitSuccess, Mysql)
 	return nil
+}
+
+func (m MysqlInitHandler) InitEmptyDsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/", global.GA_CONFIG.Mysql.Username, global.GA_CONFIG.Mysql.Password, global.GA_CONFIG.Mysql.Host, global.GA_CONFIG.Mysql.Port)
 }
 
 func (m MysqlInitHandler) InitDsn() string {

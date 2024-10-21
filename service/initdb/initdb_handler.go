@@ -12,6 +12,7 @@ type TypedDBInitHandler interface {
 	InitTables(ctx context.Context, inits initSlice) error // 建表 handler
 	InitData(ctx context.Context, inits initSlice) error   // 建数据 handler
 	InitDsn() string
+	InitEmptyDsn() string
 }
 
 // createDatabase 创建数据库（ EnsureDB() 中调用 ）

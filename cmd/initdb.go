@@ -18,7 +18,8 @@ var run = &cobra.Command{
 		err := service.ServiceGroup.InitDB()
 		if err != nil {
 			fmt.Println(err.Error())
+		} else {
+			fmt.Println("初始化数据库成功！！！")
 		}
-		fmt.Println("初始化数据库成功！！！")
 	},
 }

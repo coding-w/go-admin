@@ -2,7 +2,7 @@
 system:
   env: local
   port: 8888
-  db-type: pgsql
+  db-type: mysql
   oss-type: local
   use-redis: false
   use-mongo: false
